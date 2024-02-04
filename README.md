@@ -35,4 +35,4 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
     - Terraform if successfully deployed, should have outputted the Jenkins server IP. Copy it and paste it in your browser in this format ```http://<ipaddress>:8080```.
     Jenkins web UI is exposed at port 8080. you should see the following screen:
-    ![jenkins](images\jenkinsstartup.png)
+    ![jenkins](..\images\jenkinsstartup.png)

@@ -23,7 +23,7 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
     - Run ``` aws configure ``` and set aws environment details for your account.
 
-### Deploy Terfform:
+### Deploy Terraform:
 
     - Switch directory to VPC-Jenkins-TF
     - rename terraform.tfvars.example to terraform.tfvars and fill out the required instance and subnetting info.
@@ -35,4 +35,5 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
     - Terraform if successfully deployed, should have outputted the Jenkins server IP. Copy it and paste it in your browser in this format ```http://<ipaddress>:8080```.
     Jenkins web UI is exposed at port 8080. you should see the following screen:
-    ![jenkins](..\images\jenkinsstartup.png)
+
+![jenkins](..\images\jenkinsstartup.png)

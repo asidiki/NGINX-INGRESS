@@ -31,9 +31,21 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 - Run ` terraform plan` to ensure correct infrastructure is being deployed. -Optional
 - Run `terraform apply -auto-approve` to deploy the infrastructure
 
+### SSH into your Jenkins Server:
+
+- Open a terminal and ssh into your jenkins server using your pem key by running `ssh -i "<yourkey>.pem" ubuntu@<IPADDRESS>`
+
 ### Configure Jenkins:
 
 - Terraform if successfully deployed, should have outputted the Jenkins server IP. Copy it and paste it in your browser in this format `http://<ipaddress>:8080`.
   Jenkins web UI is exposed at port 8080. you should see the following screen:
-
-![jenkins](./images/jenkinsstartup.jpg)
+  ![jenkins](./images/jenkinsstartup.jpg)
+- In your ssh session run cat the file with password by running `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
+- Copy and paste the Admin passwork in the Jenkins setup screen. This should log you in.
+- Click on "Install suggested plugins."
+- Setup your Admin account on the next screen.
+- Complete the setup until you see the following screen:
+  ![jenkins](./images/jenkinshome.jpg)
+- Click Manage Jenkins > Credentials > Global > Add Credentials.
+- Need to add out AWS credentials for jenkins to use for deployments. Do this for both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
+  ![jenkins](./images/jenkinscred.jpg)

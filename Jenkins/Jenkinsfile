@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    environment {
+        AWS_ACCESS_KEY_ID = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        AWS_DEFAULT_REGION = "us-east-1"
+    }
+    stages {
+        stage("Intsall eksctl") {
+            steps {
+                    // #Give the location of terraform scripts directory relative 
+                    // #to the repo
+                    sh '''curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp'''
+                    sh "sudo mv /tmp/eksctl /usr/local/bin"
+                }
+            }
+        stage("Create an EKS Cluster") {
+            steps {
+                script {
+                    // #Give the location of terraform scripts directory relative 
+                    // #to the repo
+                    dir('Kubernetes/eksctl_config') {
+                        sh "eksctl create cluster --config-file ./cluster_config.yaml"
+                    }
+                }
+            }
+        }
+    }
+}

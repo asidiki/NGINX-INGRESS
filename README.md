@@ -49,3 +49,11 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 - Click Manage Jenkins > Credentials > Global > Add Credentials.
 - Need to add out AWS credentials for jenkins to use for deployments. Do this for both AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
   ![jenkins](./images/jenkinscred.jpg)
+- Add another credentials for git repo login:
+  ![jenkins](./images/gitcreds.jpg)
+
+### Setup EKS Pipeline in Jenkins:
+
+- Click New Item on Jenkins Dashboard and Select Pipeline.
+- Scroll down to Pipeline section and change the defition to Pipeline script from SCM, we'll pull the Jenkins pipeline file from our git repo:
+  ![pipeline](./images/pipeline.jpg)

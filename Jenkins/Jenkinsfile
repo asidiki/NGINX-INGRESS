@@ -19,7 +19,7 @@ pipeline {
                 script {
                     // #Give the location of terraform scripts directory relative 
                     // #to the repo
-                    dir('Kubernetes/eksctl_config') {
+                    dir('eksctl_config') {
                         sh "eksctl create cluster --config-file ./cluster_config.yaml"
                     }
                 }

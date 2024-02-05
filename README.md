@@ -57,3 +57,12 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 - Click New Item on Jenkins Dashboard and Select Pipeline.
 - Scroll down to Pipeline section and change the defition to Pipeline script from SCM, we'll pull the Jenkins pipeline file from our git repo:
   ![pipeline](./images/pipeline.jpg)
+- After creating the pipeline, click build now and wait for the EKS cluster to be built in AWS.
+
+### Setup Kubernetes Access:
+
+- On your Jenkins Server run AWS CONFIGURE to setup your aws access and run the following command to define which cluster to use:
+  `aws eks update-kubeconfig --region us-east-1 --name <cluster-name> `
+  -Verify access by running `kubectl get all`
+
+### Create Two Basic Nginx Deployments to route our traffic to:

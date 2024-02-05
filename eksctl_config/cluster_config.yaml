@@ -18,9 +18,9 @@ vpc:
 
 managedNodeGroups:
   - name: nginx-cluster
-    minSize: 2
+    minSize: 1
     maxSize: 3
-    desiredCapacity: 1
+    desiredCapacity: 2
     instanceType: t3.medium
     labels: { role: worker }
     ssh:

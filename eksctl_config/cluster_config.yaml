@@ -8,13 +8,13 @@ metadata:
 vpc:
   subnets:
     private:
-      us-east-1a: { id: subnet-04e63c7b4a46622cc }
-      us-east-1b: { id: subnet-026dc88e5f2f02b11 }
-      us-east-1c: { id: subnet-0015221fa02d9809d }
+      us-east-1a: { id: subnet-0b152eb5dac016dc8 }
+      us-east-1b: { id: subnet-09d26b8b41b456fbe }
+      us-east-1c: { id: subnet-0d891e5e50cbb950e }
     public:
-      us-east-1a: { id: subnet-048c65606b3839e24 }
-      us-east-1b: { id: subnet-002c5314939d6f494 }
-      us-east-1c: { id: subnet-00fa9b9080507bd69 }
+      us-east-1a: { id: subnet-0c29daa0ef0790e66 }
+      us-east-1b: { id: subnet-0e953c68b5d2978bb }
+      us-east-1c: { id: subnet-08e2be8723ab47905 }
 
 managedNodeGroups:
   - name: nginx-cluster

@@ -76,8 +76,11 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 ### Setup Kubernetes Access:
 
-- On your Jenkins Server run AWS CONFIGURE to setup your aws access and run the following command to define which cluster to use:
+- On your Jenkins Server run the following command to define which cluster to use:
   `aws eks update-kubeconfig --region us-east-1 --name <cluster-name> `
   -Verify access by running `kubectl get all`
 
 ### Create Two Basic Nginx Deployments to route our traffic to:
+
+- Take a look at files in /Kubernetes/Deployments. These are the 2 kubernetes definition files for the microservices we will be deploying to route our traffic to. The Pods use the nginx image and apply some basic config using ConfigMaps.
+- Run `kubectl apply -f`

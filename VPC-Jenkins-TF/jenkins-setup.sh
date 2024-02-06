@@ -37,3 +37,9 @@ wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/sha
 echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
 sudo apt update
 sudo apt install terraform -y
+
+# install helm 
+curl -o /tmp/helm.tar.gz -LO https://get.helm.sh/helm-v3.14.0-linux-amd64.tar.gz
+tar -C /tmp/ -zxvf /tmp/helm.tar.gz
+mv /tmp/linux-amd64/helm /usr/local/bin/helm
+chmod +x /usr/local/bin/helm

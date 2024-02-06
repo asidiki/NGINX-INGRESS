@@ -83,4 +83,26 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 ### Create Two Basic Nginx Deployments to route our traffic to:
 
 - Take a look at files in /Kubernetes/Deployments. These are the 2 kubernetes definition files for the microservices we will be deploying to route our traffic to. The Pods use the nginx image and apply some basic config using ConfigMaps.
-- Run `kubectl apply -f`
+- On the jenkins server, clone your repo to your desired directory.
+- Navigate to the Kubernetes/Deployments folder and Run `kubectl apply -f ./service-a.yaml ` and `kubectl apply -f ./service-b.yaml`
+- We just deployed these two micro-services in the default namespace.
+
+### Deploy the Nginx Ingress controller:
+
+- Create a new kubernetes namespace by running `kubectl create namespace ingress-nginx`
+- We will use Helm to download the Nginx Ingress controller manifest file:
+
+* Add the repo: `helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx`
+* Search the repo for avilable versions: `helm search repo ingress-nginx --versions`
+
+- From the app versions, select the version you want to install:
+  `ingress-nginx/ingress-nginx     4.4.0           1.5.1           Ingress controller for Kubernetes using NGINX a...`
+- Create Chart Version and App Version Variables:
+
+* `CHART_VERSION="4.4.0"`
+* `APP_VERSION="1.5.1"`
+
+- Navigate to Kubernetes/Ingress folder and RUN:
+  `helm template ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --version ${CHART_VERSION} --namespace ingress-nginx > ./nginx-ingress.${APP_VERSION}.yaml`
+- This will create a manifest file for us to deploy the nginx controller with. We can go in and see what exactly will be deployed.
+- RUN `kubectl apply -f nginx-ingress.${APP_VERSION}.yaml `

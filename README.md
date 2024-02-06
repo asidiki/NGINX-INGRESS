@@ -41,6 +41,10 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
   - terraform: `terraform --version`
   - helm: `helm version`
 - Run `aws configure` and enter your creds.
+- Give jenkins sudo access by editing the Sudoers file.
+
+* `sudo vim /etc/sudoers `
+* Add this at the end of the fle `jenkins ALL =(ALL:ALL) NOPASSWD: ALL`
 
 ### Configure Jenkins:
 
@@ -58,6 +62,10 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
   ![jenkins](./images/jenkinscred.jpg)
 - Add another credentials for git repo login:
   ![jenkins](./images/gitcreds.jpg)
+
+### Edit eksctl_config/cluster_config.yaml:
+
+- In this file edit the subnet information and enter your VPCs private and public subnet IDs. Push changes to your repo.
 
 ### Setup EKS Pipeline in Jenkins:
 

@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: serviceab
+  annotations:
+    nginx.org/mergeable-ingress-type: "master"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: <loadbalancer dns address>
+      http:
+        paths:
+          - path: /servicea
+            pathType: Prefix
+            backend:
+              service:
+                name: service-a
+                port:
+                  number: 80
+          - path: /serviceb
+            pathType: Prefix
+            backend:
+              service:
+                name: service-b
+                port:
+                  number: 80

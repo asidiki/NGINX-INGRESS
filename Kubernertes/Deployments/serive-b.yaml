@@ -4,7 +4,7 @@ metadata:
   name: service-b
 data:
   index.html: |
-    <h1>Welcome to B</h1>
+    <h1 style="background-color:Green;">Welcome to Service B</h1>
   404.html: |
     service-b 404 page
 ---
@@ -58,7 +58,7 @@ spec:
         app: service-b
     spec:
       containers:
-        - name: nginx
+        - name: service-b
           image: nginx:1.14.2
           ports:
             - containerPort: 80

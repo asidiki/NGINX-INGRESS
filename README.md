@@ -48,9 +48,8 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
   - helm: `helm version`
 - Run `aws configure` and enter your creds.
 - Give jenkins sudo access by editing the Sudoers file.
-
-* `sudo vim /etc/sudoers `
-* Add this at the end of the fle `jenkins ALL =(ALL:ALL) NOPASSWD: ALL`
+  - `sudo vim /etc/sudoers `
+  - Add this at the end of the fle `jenkins ALL =(ALL:ALL) NOPASSWD: ALL`
 
 ### Configure Jenkins:
 

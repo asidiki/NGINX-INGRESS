@@ -106,3 +106,16 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
   `helm template ingress-nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx --version ${CHART_VERSION} --namespace ingress-nginx > ./nginx-ingress.${APP_VERSION}.yaml`
 - This will create a manifest file for us to deploy the nginx controller with. We can go in and see what exactly will be deployed.
 - RUN `kubectl apply -f nginx-ingress.${APP_VERSION}.yaml `
+- To verify got created successfully run `kubectl get all -n ingress-nginx`, should look like this:
+  ![ingresscont](./images/ingresscontrol.jpg)
+  -Notice the service called ingress-nginx-controller and its "EXTERNAL-IP", thats the FQDN that can use to access resources within our cluster, if you copy and paste that in your browser you should see the following error page:
+  ![404](./images/404.jpg)
+
+### Create First Ingress:
+
+- Now that we have our ingress controller setup, we need to tell it how to route traffic by creating an ingress. the yaml file located at Kubernetes/Ingress/Ingress.yaml, does that for us. If you look at it, we are defining route based paths to the two nginx microservices we spun up earlier.
+- Navigate to the Ingress directory and edit the file and enter the Loadbalancer FQDN in the 'host' field, without the http://.
+  ![host](./images/host.jpg)
+- Run `kubectl apply -f Ingress.yaml` to deploy our first ingress in the default namespace to the two microservives. Note the paths we have provided are FQDN/servicea and FQDN/serviceb. Lets test it out in our browser:
+  ![servicea](./images/serviceA.jpg) ![serviceb](./images/serviceb.jpg)
+- Congratulations, you have successfully deployed two microservices, the nginx ingress controller and successfully routed traffic to them using path based routing by creating an Ingress in the default namespace.

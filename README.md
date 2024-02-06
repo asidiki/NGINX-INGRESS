@@ -39,7 +39,7 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 ### Jenkins Server setup :
 
-- Open a terminal on your local computer and ssh into your jenkins server using your pem key by running `ssh -i "<yourkey>.pem" ubuntu@<IPADDRESS>`
+- Terraform if successfully deployed, should have outputted the Jenkins server IP. Copy and open a terminal on your local computer and ssh into your jenkins server using your pem key by running `ssh -i "<yourkey>.pem" ubuntu@<IPADDRESS>`
 - Verify installation of all the tools that were installed in the bootstrap, ensure you dont get any errors back when you check versions:
   - Jenkins: `jenkins --version`
   - awscli: `aws --version`
@@ -54,11 +54,11 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 ### Configure Jenkins:
 
-- Terraform if successfully deployed, should have outputted the Jenkins server IP. Copy it and paste it in your browser in this format `http://<ipaddress>:8080`.
+- Access the Jenkins Web UI by going to the IP address in your browser at port 8080. `http://<ipaddress>:8080`.
   Jenkins web UI is exposed at port 8080. you should see the following screen:
   ![jenkins](./images/jenkinsstartup.jpg)
 - In your ssh session run cat the file with password by running `sudo cat /var/lib/jenkins/secrets/initialAdminPassword`
-- Copy and paste the Admin passwork in the Jenkins setup screen. This should log you in.
+- Copy and paste the Admin password in the Jenkins setup screen. This should log you in.
 - Click on "Install suggested plugins."
 - Setup your Admin account on the next screen.
 - Complete the setup until you see the following screen:
@@ -82,8 +82,8 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 ### Setup Kubernetes Access:
 
-- On your Jenkins Server run the following command to define which cluster to use:
-  `aws eks update-kubeconfig --region us-east-1 --name <cluster-name> `
+- On your Jenkins Server run the following command to define which cluster to use:<br>
+  `aws eks update-kubeconfig --region us-east-1 --name <cluster-name>`<br>
   -Verify access by running `kubectl get all`
 
 ### Create Two Basic Nginx Deployments to route our traffic to:

@@ -4,14 +4,19 @@
 
 ## WHAT:
 
-Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Controller. - Create multiple Kubernetes deployments as micro-services. - Enable logging for the Kubernetes cluster using prometheus and grafana. - Enable Kubernetes ingress for these pods using Nginx Ingress Controller. - Enable Kubernetes Ingress across namespaces.
+Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Controller.
+
+- Create multiple Kubernetes deployments as micro-services.
+- Enable logging for the Kubernetes cluster using prometheus and grafana.
+- Enable Kubernetes ingress for these pods using Nginx Ingress Controller.
+- Enable Kubernetes Ingress across namespaces.
 
 ## HOW:
 
 - Create AWS VPC and Deploy Jenkins on a Ec2 instance using terraform.
 - Deploy EKS using 'eksctl' with the help of a Jenkins pipeline.
-- Deploy Nginx Ingress controller in its dedicated namespace.
 - Deploy two basic Nginx Pods as microservices with the help of ConfigMaps in the default namespace. Route traffic to these services using nginx ingress controller.
+- Deploy Nginx Ingress controller in its dedicated namespace.
 - Deploy Prometheus and Grafana in the logging namespace, route traffic to these pods using Nginx Ingress controller.
 - Setup Grafana dashboard for EKS cluster monitoring.
 

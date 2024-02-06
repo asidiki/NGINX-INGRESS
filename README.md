@@ -17,11 +17,11 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 ## Steps:
 
-### Clone repo locally - ` git clone <url>` <br>
+### Clone repo locally - ` git clone <url>` on your local computer <br>
 
 ### Configure awscli:
 
-- Run `aws configure` and set aws environment details for your account.
+- Run `aws configure` and set aws environment details for your account on your local computer.
 
 ### Deploy Terraform:
 
@@ -31,9 +31,16 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 - Run ` terraform plan` to ensure correct infrastructure is being deployed. -Optional
 - Run `terraform apply -auto-approve` to deploy the infrastructure
 
-### SSH into your Jenkins Server:
+### Jenkins Server setup :
 
-- Open a terminal and ssh into your jenkins server using your pem key by running `ssh -i "<yourkey>.pem" ubuntu@<IPADDRESS>`
+- Open a terminal on your local computer and ssh into your jenkins server using your pem key by running `ssh -i "<yourkey>.pem" ubuntu@<IPADDRESS>`
+- Verify installation of all the tools that were installed in the bootstrap, ensure you dont get any errors back when you check versions:
+  - Jenkins: `jenkins --version`
+  - awscli: `aws --version`
+  - kubectl: `kubectl version`
+  - terraform: `terraform --version`
+  - helm: `helm version`
+- Run `aws configure` and enter your creds.
 
 ### Configure Jenkins:
 

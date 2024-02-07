@@ -155,7 +155,7 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 - We will deploy Prometheus using Helm.
 - Add the prometheus-community chart repo `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
-- Deploy Prometheus `helm upgrade -i prometheus prometheus-community/prometheus --namespace monitoring --set alertmanager.persistentVolume.existingClaim="efs-claim",server.persistentVolume.existingClaim="efs-claim"` - Notice the storageClass name is what we had created in our storageclass.yaml file.
+- Deploy Prometheus `helm upgrade -i prometheus prometheus-community/prometheus --namespace monitoring --set alertmanager.enabled=false,server.persistentVolume.existingClaim="efs-claim"` - Notice the storageClass name is what we had created in our storageclass.yaml file.
 - Verify all pods are running `kubectl get all -n monitoring`
 - Make sure you capture the Prometheus server access URL in the notes that show up, we will need this URL to setup grafana:
   ![prom](./images/prom.jpg)

@@ -1,0 +1,15 @@
+---
+grafana:
+  enabled: true
+
+  ingress:
+    enabled: true
+    annotations:
+
+  persistence:
+    type: pvc
+    enabled: true
+    # annotations: {}
+    finalizers:
+      - kubernetes.io/pvc-protection
+    existingClaim: efs-claim

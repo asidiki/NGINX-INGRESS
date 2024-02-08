@@ -83,7 +83,7 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 - On your Jenkins Server run the following command to define which cluster to use:<br>
   `aws eks update-kubeconfig --region us-east-1 --name <cluster-name>`<br>
-  -Verify access by running `kubectl get all`
+- Verify access by running `kubectl get all`
 
 ### Create Two Basic Nginx Deployments to route our traffic to:
 

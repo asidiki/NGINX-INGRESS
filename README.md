@@ -199,6 +199,6 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 - Next, we deployed prometheus and grafana in the monitoring namespace and used the Persistent Volume as storage for these services.
 - We also routed traffic to the Grafana service using the Nginx Ingress Controller, this traffic is going across namespaces to the monitoring namespace which is different than the first ingress we created for the default namespace.
 - Lastly, we configured Grafana and added Prometheus as a Data Source. Imported a dashboard and were able to successfully pull in cluster metrics.
-- This is the easiest way to get a EKS cluster up and going in a very short amount time with Ingress and Observability enabled. Hope you find this helpful.
+- This is the easiest way to get a EKS cluster up and running in a very short amount time with Ingress and Observability enabled. Hope you find this helpful.
 
 **ansab@sidiki.io**

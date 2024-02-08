@@ -121,13 +121,13 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 - Now that we have our ingress controller setup, we need to tell it how to route traffic by creating an ingress. the yaml file located at Kubernetes/Ingress/Ingress.yaml, does that for us. If you look at it, we are defining route based paths to the two nginx microservices we spun up earlier.
 - Navigate to the Ingress directory and edit the file and enter the Loadbalancer URL in the 'host' field, without the http://.
   ![host](./images/host.jpg)
-- Run `kubectl apply -f Ingress.yaml` to deploy our first ingress in the default namespace to the two microservives. Note the paths we have provided are URL/servicea and URL/serviceb. Lets test it out in our browser:
+- Run `kubectl apply -f Ingress.yaml` to deploy our first ingress in the default namespace for the two microservives. Note the paths we have provided are URL/servicea and URL/serviceb. Lets test it out in our browser:
   ![servicea](./images/serviceA.jpg) ![serviceb](./images/serviceb.jpg)
 - Congratulations, you have successfully deployed two microservices, the nginx ingress controller and successfully routed traffic to them using path based routing by creating an Ingress in the default namespace.
 
 ### Provision EFS Volume:
 
-- Prometheus needs a persistent volume to run, which the EKS cluster does not have by default.
+- Prometheus and Grafana need a persistent volume to run, which the EKS cluster does not have by default.
 - We will provision an EFS volume mainly with aws cli on the ssh session we have on our Jenkins Server.
 
 1. Capture your VPC ID - `aws ec2 describe-vpcs`
@@ -136,39 +136,39 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 3. Add rules to the security group to authorize inbound/outbound access `aws ec2 authorize-security-group-ingress --group-id identifier for the security group created for our Amazon EFS mount targets (i.e. sg-1234567ab12a345cd) --region us-east-1 --protocol tcp --port 2049 --cidr <VPC CIDR BLOCK(eg: 192.168.0.0/16)>`
 4. Create an Amazon EFS file system `aws efs create-file-system --creation-token creation-token --performance-mode generalPurpose --throughput-mode bursting --region us-east-1 --tags Key=Name,Value=MyEFSFileSystem --encrypted`
 5. Capture VPC subnets where the EKS cluster nodes are running `aws ec2 describe-instances --filters Name=vpc-id,Values= identifier for our VPC (i.e. vpc-1234567ab12a345cd) --query 'Reservations[*].Instances[].SubnetId'`
-6. Create mount targets in each subnet that was returned by the above query `aws efs create-mount-target --file-system-id identifier for our file system (i.e.fs-123b45fa) --subnet-id identifier for our node group subnets (i.e. subnet-1234567ab12a345cd) --security-group identifier for the security group created for our Amazon EFS mount targets (i.e. sg-1234567ab12a345cd) --region us-east-1`. Create for the first subnet and then run it again with subnet id for the second subnet.
+6. Create mount targets in each subnet that was returned by the above query `aws efs create-mount-target --file-system-id identifier for our file system (i.e.fs-123b45fa) --subnet-id identifier for our node group subnets (i.e. subnet-1234567ab12a345cd) --security-group identifier for the security group created for our Amazon EFS mount targets (i.e. sg-1234567ab12a345cd) --region us-east-1`. Create for the first subnet and then run it again with subnet id for the second and third subnets if you have them.
 7. Create an Amazon EFS access point `aws efs create-access-point --file-system-id identifier for our file system (i.e. fs-123b45fa) --posix-user Uid=1000,Gid=1000 --root-directory "Path=/jenkins,CreationInfo={OwnerUid=1000,OwnerGid=1000,Permissions=777}"`
 8. This completes creating the EFS volume that we will use as a persistent volume for our EKS cluster. Be sure to record the fs id and fsap id when the resources get created.
 
-### Deploy the Amazon EFS CSI driver to your Amazon EKS cluster:
+### Deploy the Amazon EFS CSI driver and Persistent Volume to your Amazon EKS cluster:
 
 1. Deploy the Amazon EFS CSI driver to your Amazon EKS cluster `kubectl apply -k "github.com/kubernetes-sigs/aws-efs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"`
 
 - Output: `daemonset.apps/efs-csi-node created csidriver.storage.k8s.io/efs.csi.aws.com created`
 
 2. Create the Monitoring namespace in our cluster `kubectl create namespace monitoring`
-3. Navigate to the Kubernetes/EFS CSI Driver. These files create a storageclass, a persistent volume and a persistent volume claim on our EKS cluster. Before we deploy, edit the persistentvolume.yaml and enter your values for fs-id and fsap-id into the volumeHandler field in this format: fs-123b45fa::fsap-12345678910ab12cd34.
+3. Navigate to the Kubernetes/PersistentVolume. These files create a storageclass, a persistent volume and a persistent volume claim on our EKS cluster. Before we deploy, edit the persistentvolume.yaml and enter your values for fs-id and fsap-id into the volumeHandler field in this format: `fs-123b45fa::fsap-12345678910ab12cd34`.
 4. StorageClass, PersistentVolume and PersistentVolumeClaim are all namespace resources, we will deploy these resources in the Monitoring namespace: `kubectl apply -f storageclass.yaml,persistentvolume.yaml,persistentvolumeclaim.yaml -n monitoring`
-   5 Ensure the resources were created `kubectl get sc,pv,pvc`
+5. Ensure the resources were created `kubectl get sc,pv,pvc`
 
 ### Deploy Prometheus:
 
 - We will deploy Prometheus using Helm.
 - Add the prometheus-community chart repo `helm repo add prometheus-community https://prometheus-community.github.io/helm-charts`
-- Deploy Prometheus `helm upgrade -i prometheus prometheus-community/prometheus --namespace monitoring --set alertmanager.enabled=false,server.persistentVolume.existingClaim="efs-claim"` - Notice the storageClass name is what we had created in our storageclass.yaml file.
+- Deploy Prometheus `helm upgrade -i prometheus prometheus-community/prometheus --namespace monitoring --set alertmanager.enabled=false,server.persistentVolume.existingClaim="efs-claim"` - Notice how we are defining a PV claim for prometheus to use is what we had created in our persistingvolumeclaim.yaml file.
 - Verify all pods are running `kubectl get all -n monitoring`
 - Make sure you capture the Prometheus server access URL in the notes that show up, we will need this URL to setup grafana:
   ![prom](./images/prom.jpg)
 
 ### Deploy Grafana and Ingress:
 
-- We will again deploy Grafana using Helm and the same EFS PV in the monitoring namespace.
-- Navigate to /Kubernetes/Grafana
-- Deploy Grafana `helm install grafana grafana/grafana --namespace monitoring --set adminPassword='EKS!sAWSome' --values ./values.yaml`
+- We will again deploy Grafana using Helm and use the same EFS PV in the monitoring namespace.
+- Navigate to /Kubernetes/Grafana, the file in here are value we will provide for the Grafana helm chart.
+- Deploy Grafana `helm install grafana grafana/grafana --namespace monitoring --set adminPassword='Y0urChoic3' --values ./values.yaml`
 - Now we deploy an Ingress, telling the nginx ingress controller to route traffic to Grafana in the monitoring namespace.
-- Navigate to Kubernetes/Ingress and edit the file with the URL of your Nginx Ingress Controller LoadBalancer.
+- Navigate to Kubernetes/Ingress and edit the file with the URL of your Nginx Ingress Controller LoadBalancer. Also notice the field `nginx.org/mergeable-ingress-type: "minion"`, this is what tells the Nginx Ingress Controller that this is a secondary ingress and be in a different namespace.
 - Deploy the Ingress `kubectl apply -f monitoringIngress.yaml -n monitoring`
-- paste the url in your browser with a / at the end, you should see the grafana front end:
+- Paste the url in your browser with a / at the end, you should see the grafana front end:
   ![grafanafront](./images/grafanafront.jpg)
 
 ### Setup Grafana:
@@ -179,7 +179,7 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 - Select Prometheus.
 - In the connection section, add the Prometheus server URL that we captured earlier:
   ![](./images/grafprom.jpg)
-- Click save abd test at the bottom.
+- Click save and test at the end of the page.
 - Go to Grafana home and click Create your first Dashboard.
 - Click Import Dashboard
 - Visit https://grafana.com/grafana/dashboards/ to find the dasboard that fits your needs, eg: https://grafana.com/grafana/dashboards/6417-kubernetes-cluster-prometheus/
@@ -191,11 +191,13 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 ### Conclusion
 
-- In this project we were able to deploy the VPC infrastructure using Terraform, which also spun up our Jenkins Server on an Ec2 using an Ubuntu Image. The server had a bootstrap script that installed all the tools like jenkins, kubectl, eksctl, helm etc for us. We leveraged Jenkins to deploy our EKS cluster using eksctl into our existing VPC. After we had the EKS clustered deployed, we spun up two basic nginx webapps as microservcies in the default namspace. We then deployed Nginx Ingress Controller in the ingress-nginx namespace and created our first ingress to route to the nginx webapp microservices in default namespace.
+- In this project we were able to deploy the VPC infrastructure using Terraform, which also spun up our Jenkins Server on an Ec2 using an Ubuntu Image. The server had a bootstrap script that installed all the tools like jenkins, kubectl, eksctl, helm etc for us.
+- We leveraged Jenkins to deploy our EKS cluster using `eksctl` into our existing VPC.
+- After we had the EKS cluster deployed, we spun up two basic nginx webapps as microservcies in the default namspace. = - We then deployed Nginx Ingress Controller in the ingress-nginx namespace and created our first ingress to route to the nginx webapp microservices in default namespace.
 - We then provisioned a EFS volume and attached it to the EKS cluster as a Persistent Volume.
-- We then deployed prometheus and grafana in the monitoring namespace and used the Persistent Volume as storage for these pods.
-- We also routed traffic to the Grafana pod using the Nginx Ingress Controller, this traffic is going across namespaces to the monitoring namespace which is different than the first ingress we created for the default namespace.
-- Lastly, we configured Grafana and added Prometheus as a Data Source. Imported a dashboard and were able to successfully pull in metrics.
-- This is a great tutorial to get a EKS cluster up and going in a very short amount time with Ingress and Observability enabled. Hope you find this helpful.
+- Next, we deployed prometheus and grafana in the monitoring namespace and used the Persistent Volume as storage for these services.
+- We also routed traffic to the Grafana service using the Nginx Ingress Controller, this traffic is going across namespaces to the monitoring namespace which is different than the first ingress we created for the default namespace.
+- Lastly, we configured Grafana and added Prometheus as a Data Source. Imported a dashboard and were able to successfully pull in cluster metrics.
+- This is the easiest way to get a EKS cluster up and going in a very short amount time with Ingress and Observability enabled. Hope you find this helpful.
 
 **ansab@sidiki.io**

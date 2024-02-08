@@ -193,7 +193,8 @@ Goal of this project is to enable Kubernetes Ingress using the Nginx Ingress Con
 
 - In this project we were able to deploy the VPC infrastructure using Terraform, which also spun up our Jenkins Server on an Ec2 using an Ubuntu Image. The server had a bootstrap script that installed all the tools like jenkins, kubectl, eksctl, helm etc for us.
 - We leveraged Jenkins to deploy our EKS cluster using `eksctl` into our existing VPC.
-- After we had the EKS cluster deployed, we spun up two basic nginx webapps as microservcies in the default namspace. = - We then deployed Nginx Ingress Controller in the ingress-nginx namespace and created our first ingress to route to the nginx webapp microservices in default namespace.
+- After we had the EKS cluster deployed, we spun up two basic nginx webapps as microservcies in the default namspace.
+- We then deployed Nginx Ingress Controller in the ingress-nginx namespace and created our first ingress to route to the nginx webapp microservices in default namespace.
 - We then provisioned a EFS volume and attached it to the EKS cluster as a Persistent Volume.
 - Next, we deployed prometheus and grafana in the monitoring namespace and used the Persistent Volume as storage for these services.
 - We also routed traffic to the Grafana service using the Nginx Ingress Controller, this traffic is going across namespaces to the monitoring namespace which is different than the first ingress we created for the default namespace.
